@@ -2,7 +2,9 @@ import bcrypt from 'bcryptjs';
 import postgres from 'postgres';
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+// Use the non-pooling URL: pgbouncer (pooler) rejects the prepared
+// statements that sql.begin() transactions require.
+const sql = postgres(process.env.POSTGRES_URL_NON_POOLING!, { ssl: 'require' });
 
 async function seedUsers() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
